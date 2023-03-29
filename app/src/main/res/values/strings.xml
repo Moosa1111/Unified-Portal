@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">UnifiedPortal</string>
+    <string-array name="expense_categories">
+        <item>Food</item>
+        <item>Transportation</item>
+        <item>Entertainment</item>
+        <item>Shopping</item>
+        <item>Other</item>
+    </string-array>
+</resources>
+
