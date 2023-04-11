@@ -1,15 +1,16 @@
 package com.example.unifiedportal
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Adapter
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.Spinner
-import android.widget.TextView
-import org.w3c.dom.Text
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class ExpenditureActivity : AppCompatActivity() {
+
+    private lateinit var auth: FirebaseAuth
+    private var database = Firebase.firestore
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_expenditure)
@@ -30,11 +31,26 @@ class ExpenditureActivity : AppCompatActivity() {
         // Add an onClickListener to the add_button
         addbutton.setOnClickListener {
             // Get the values entered by the user
-            val category = categoryspinner.selectedItem.toString()
+            val category = categoryspinner.selectedItem.toString().trim()
             val amount = expenseamount.text.toString().toDouble()
-            val note = expensenote.text.toString()
+            val note = expensenote.text.toString().trim()
 
-            // TODO: Save the expense to a database or other storage mechanism
+            val userMap = hashMapOf(
+                "Category" to category,
+                "Amount" to amount,
+                "Note" to note
+            )
+
+            val userId = FirebaseAuth.getInstance().currentUser!!.uid
+
+            database.collection("users").document(userId).set(userMap)
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Data Added Successfully", Toast.LENGTH_SHORT)
+                        .show()
+
+
+                    // TODO: Save the expense to a database or other storage mechanism
+                }
         }
     }
 }

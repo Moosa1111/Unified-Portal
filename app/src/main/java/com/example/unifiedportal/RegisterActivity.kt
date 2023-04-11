@@ -9,18 +9,30 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
-
+    private var database = Firebase.firestore
+    private lateinit var email: EditText
+    private lateinit var password: EditText
+    private lateinit var firstname: EditText
+    private lateinit var lastname: EditText
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
         auth = Firebase.auth
-
+        email = findViewById(R.id.textEmail)
+        password = findViewById(R.id.password)
+        firstname = findViewById(R.id.textFirstName)
+        lastname = findViewById(R.id.textLastName)
+        //database = FirebaseDatabase.getInstance().getReference("Users")
         val logintext: TextView = findViewById(R.id.textSignIn)
 
 
@@ -32,7 +44,25 @@ class RegisterActivity : AppCompatActivity() {
         val btnregister: Button = findViewById(R.id.buttonRegister)
 
         btnregister.setOnClickListener{
-            performSignUp()
+            val sName = firstname.text.toString().trim()
+            val lName = lastname.text.toString().trim()
+            val sEmail = email.text.toString().trim()
+
+            val userMap = hashMapOf(
+                "First name" to sName,
+                "Last name" to lName,
+                "Email" to sEmail
+            )
+
+            val userId = FirebaseAuth.getInstance().currentUser!!.uid
+
+            database.collection("users").document(userId).set(userMap)
+                .addOnSuccessListener {
+                    Toast.makeText(this,"Data Added Successfully",Toast.LENGTH_SHORT)
+                        .show()
+                    performSignUp()
+
+                }
         }
 
     }
