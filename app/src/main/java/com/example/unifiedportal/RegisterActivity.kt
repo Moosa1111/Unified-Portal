@@ -85,10 +85,26 @@ class RegisterActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, let move to the next activity i.e HomeActivity
+                    val userId = FirebaseAuth.getInstance().currentUser!!.uid // get the user id
+                    val sName = firstname.text.toString().trim()
+                    val lName = lastname.text.toString().trim()
+                    val sEmail = email.text.toString().trim()
 
-                    val intent = Intent(this,HomeActivity::class.java)
-                    startActivity(intent)
+                    val userMap = hashMapOf(
+                        "First name" to sName,
+                        "Last name" to lName,
+                        "Email" to sEmail,
+                        "User id" to userId // add user id to the map
+                    )
 
+                    database.collection("users").document(userId).set(userMap)
+                        .addOnSuccessListener {
+                            Toast.makeText(this,"Data Added Successfully",Toast.LENGTH_SHORT)
+                                .show()
+                            val intent = Intent(this,HomeActivity::class.java)
+                            startActivity(intent)
+
+                        }
                 } else {
                     // If sign in fails, display a message to the user.
                     Toast.makeText(baseContext, "Authentication failed. $",
@@ -101,4 +117,5 @@ class RegisterActivity : AppCompatActivity() {
                     .show()
             }
     }
+
 }

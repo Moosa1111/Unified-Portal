@@ -35,22 +35,28 @@ class ExpenditureActivity : AppCompatActivity() {
             val amount = expenseamount.text.toString().toDouble()
             val note = expensenote.text.toString().trim()
 
-            val userMap = hashMapOf(
-                "Category" to category,
-                "Amount" to amount,
-                "Note" to note
-            )
 
             val userId = FirebaseAuth.getInstance().currentUser!!.uid
 
-            database.collection("users").document(userId).set(userMap)
-                .addOnSuccessListener {
-                    Toast.makeText(this, "Data Added Successfully", Toast.LENGTH_SHORT)
-                        .show()
+            val expensesRef = database.collection("users").document(userId).collection("expenses")
+
+            val expense = hashMapOf(
+                "category" to category,
+                "amount" to amount,
+                "note" to note
+            )
+
+            // add the expense data to the subcollection
+            expensesRef.add(expense)
+                .addOnSuccessListener { documentReference ->
+                    Toast.makeText(this, "Expense added successfully", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Error adding expense: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
 
 
                     // TODO: Save the expense to a database or other storage mechanism
                 }
         }
     }
-}
