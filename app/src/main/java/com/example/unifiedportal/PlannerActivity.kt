@@ -1,6 +1,7 @@
 package com.example.unifiedportal
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -28,6 +29,8 @@ class PlannerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_planner)
 
         auth = FirebaseAuth.getInstance()
+        val viewEvents: Button = findViewById(R.id.viewevents)
+
 
         calendarView.setOnDateChangeListener { _, i, i1, i2 ->
             year = i
@@ -38,6 +41,11 @@ class PlannerActivity : AppCompatActivity() {
         addevent = findViewById(R.id.button)
         addevent.setOnClickListener {
             createEventOnChosenDate()
+        }
+
+        viewEvents.setOnClickListener{
+            val intent = Intent(this, AllEventsActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -58,8 +66,8 @@ class PlannerActivity : AppCompatActivity() {
             val eventName = inputEventName.text.toString()
 
 
-           // val eventDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
-           // val eventDateTime = eventDateFormat.parse("$year-${month+1}-$day $eventTime") ?: Date()
+            // val eventDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+            // val eventDateTime = eventDateFormat.parse("$year-${month+1}-$day $eventTime") ?: Date()
 
             val currentUser = auth.currentUser
             if (currentUser != null) {
@@ -74,7 +82,7 @@ class PlannerActivity : AppCompatActivity() {
                     .collection("events")
                     .add(event)
                     .addOnSuccessListener {
-                        Log.d(TAG, "Event name added to Firestore with ID: ${it.id}")
+                        Log.d(TAG, "Event name added to Firestore")
                     }
                     .addOnFailureListener {
                         Log.e(TAG, "Error adding event name to Firestore", it)
@@ -97,4 +105,7 @@ class PlannerActivity : AppCompatActivity() {
     }
 }
 
-data class Event(val name: String, val time: Date)
+data class Event(
+    val name: String = "",
+    val time: Date = Date()
+)

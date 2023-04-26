@@ -75,7 +75,7 @@ class ChartActivity : AppCompatActivity() {
                 pieChart.setDrawHoleEnabled(false)
                 pieChart.description.isEnabled = false
                 pieChart.legend.isEnabled = false
-                pieChart.setUsePercentValues(true)
+//                pieChart.setUsePercentValues(true)
                 pieChart.setEntryLabelTextSize(12f)
                 pieChart.data = pieData
                 pieChart.animateY(1000)

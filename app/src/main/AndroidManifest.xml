@@ -16,6 +16,18 @@
         android:theme="@style/Theme.UnifiedPortal"
         tools:targetApi="31">
         <activity
+            android:name=".AllEventsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AllGoalsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SplashScreenActivity2"
+            android:exported="false" />
+        <activity
+            android:name=".AddGoalActivity"
+            android:exported="false" />
+        <activity
             android:name=".GoalActivity"
             android:exported="false" />
         <activity
